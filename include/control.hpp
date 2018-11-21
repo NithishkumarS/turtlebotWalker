@@ -45,8 +45,7 @@
  *  @return bool
  */
 class control {
-
-private:
+ private:
   /**
      * NodeHandle is the main access point to communications with the ROS system.
      * The first NodeHandle constructed will fully initialize this node, and the last
@@ -58,24 +57,22 @@ ros::Publisher vel;
 ros::Subscriber laser;
 geometry_msgs::Twist info;
 
-
-public:
-/**@brief constructor
+ public:
+ /**@brief constructor
   * @param none
   * @return none
   */
 control();
 
-/**@brief destructor
- * @param zStart
- * @return none
- */
+ /**@brief destructor
+  * @param zStart
+  * @return none
+  */
 ~control();
 
-/**@brief function to control the turtlebot
+ /**@brief function to control the turtlebot
   * @param none
   * @return none
   */
 void command();
-
 };

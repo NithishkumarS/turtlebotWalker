@@ -31,11 +31,11 @@
 
  */
 
- #include "ros/ros.h"
- #include "control.hpp"
- #include "depthData.hpp"
+#include "ros/ros.h"
+#include "control.hpp"
+#include "depthData.hpp"
 
- control::control(){
+control::control() {
 
   vel = nh.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity",100);
   laser = nh.subscribe<sensor_msgs::LaserScan>("/scan", 100, &depthData::scanCallback, &depth);
@@ -47,9 +47,9 @@
   info.angular.y = 0.0;
   info.angular.z = 0.0;
   vel.publish(info);	
- }
+}
 
-control::~control(){
+control::~control() {
 
   info.linear.x = 0.0;
   info.linear.y = 0.0;
@@ -58,20 +58,20 @@ control::~control(){
   info.angular.y = 0.0;
   info.angular.z = 0.0;
   vel.publish(info);	
- }
+}
 
-void control::command(){
-	ros::Rate loop_rate(10);
-	while(ros::ok()){
-		if(depth.obstacleCheck()){
-			info.linear.x = 0;
-			info.angular.z = 1;
+void control::command() {
+  ros::Rate loop_rate(10);
+  while(ros::ok()) {
+  	if(depth.obstacleCheck() < .5) {
+    	info.linear.x = 0;
+    	info.angular.z = 1;
 		}
-		else{
-			info.linear.x = 1;
-			info.angular.z = 0;
-		}
-	vel.publish(info);
-	loop_rate.sleep();
+		else {
+      info.linear.x = 1;
+      info.angular.z = 0;
     }
+  vel.publish(info);
+  loop_rate.sleep();
+  }
 }

@@ -39,32 +39,32 @@
  *  @param obstacle If near a obstacle its set true
  *  @return bool
  */
- class depthData {
+class depthData {
  private:
- bool obstacle;
+bool obstacle;
+
  public:
  /**@brief constructor
    * @param none
    * @return none
    */
- depthData();
+depthData();
 
  /**@brief destructor
    * @param zStart
    * @return none
    */
- ~depthData();
+~depthData();
 
  /**@brief callback function
    * @param temp sensor_msgs/LaserScan type
    * @return none
    */
- void scanCallback(const sensor_msgs::LaserScan::ConstPtr& temp);
+void scanCallback(const sensor_msgs::LaserScan::ConstPtr& temp);
 
   /**@brief returns the value of obstacle
    * @param none
    * @return obstacle bool value
    */
- bool obstacleCheck();
-
- };
+bool obstacleCheck();
+};
