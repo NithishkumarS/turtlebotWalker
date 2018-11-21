@@ -24,7 +24,7 @@
 
 /**@file depthData.hpp
  *
- * @brief To publish message in a topic
+ * @brief To get the depth from sensor tppic
  *
  * @author Nithish Sanjeev Kumar
  * @copyright 2018 , Nithish Sanjeev Kumar All rights reserved
@@ -35,13 +35,36 @@
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
 
+/** @brief Class to collect data from the laser
+ *  @param obstacle If near a obstacle its set true
+ *  @return bool
+ */
  class depthData {
  private:
  bool obstacle;
  public:
+ /**@brief constructor
+   * @param none
+   * @return none
+   */
  depthData();
+
+ /**@brief destructor
+   * @param zStart
+   * @return none
+   */
  ~depthData();
+
+ /**@brief callback function
+   * @param temp sensor_msgs/LaserScan type
+   * @return none
+   */
  void scanCallback(const sensor_msgs::LaserScan::ConstPtr& temp);
+
+  /**@brief returns the value of obstacle
+   * @param none
+   * @return obstacle bool value
+   */
  bool obstacleCheck();
 
  };

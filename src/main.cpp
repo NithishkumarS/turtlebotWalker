@@ -24,7 +24,7 @@
 
 /**@file main.cpp
  *
- * @brief To publish message in a topic
+ * @brief To enable the walker node
  *
  * @author Nithish Sanjeev Kumar
  * @copyright 2018 , Nithish Sanjeev Kumar All rights reserved

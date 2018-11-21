@@ -36,9 +36,22 @@
 #include "sensor_msgs/LaserScan.h"
 #include "depthData.hpp"
 
+/** @brief Class to implement the control of turtlebot
+ *  @param nh NodeHandle for the node
+ *  @param depth Class object of depthData
+ *  @param vel Publisher object
+ *  @param laser Subsriber object
+ *  @param info  variable to send velocities
+ *  @return bool
+ */
 class control {
 
 private:
+  /**
+     * NodeHandle is the main access point to communications with the ROS system.
+     * The first NodeHandle constructed will fully initialize this node, and the last
+     * NodeHandle destructed will close down the node.
+     */
 ros::NodeHandle nh;
 depthData depth;
 ros::Publisher vel;
@@ -47,12 +60,22 @@ geometry_msgs::Twist info;
 
 
 public:
-
+/**@brief constructor
+  * @param none
+  * @return none
+  */
 control();
 
+/**@brief destructor
+ * @param zStart
+ * @return none
+ */
 ~control();
 
+/**@brief function to control the turtlebot
+  * @param none
+  * @return none
+  */
 void command();
-
 
 };
