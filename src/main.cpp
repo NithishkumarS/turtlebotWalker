@@ -35,12 +35,11 @@
 #include "depthData.hpp"
 #include "control.hpp"
 
- int main(int argc, char **argv)
- {
+int main(int argc, char **argv) {
   ros::init(argc, argv, "walker");
 
-	control object;
-	object.command();
+  control object;
+  object.command();
 
- 	return 0;
- }
+  return 0;
+}
