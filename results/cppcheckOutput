@@ -1,0 +1,16 @@
+
+cppcheck depthData.hpp 
+Checking depthData.hpp...
+
+cppcheck control.hpp 
+Checking control.hpp...
+
+cppcheck depthData.cpp 
+Checking depthData.cpp...
+
+cppcheck control.cpp 
+Checking control.cpp...
+
+cppcheck main.cpp 
+Checking main.cpp...
+
