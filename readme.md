@@ -58,7 +58,8 @@ To create a new bag file type
 ```
 cd ~/catkin_ws
 source devel/setup.bash
-roslaunch turtlebot_walker walker.launch recordBag:=true```
+roslaunch turtlebot_walker walker.launch recordBag:=true
+```
 
 press ctrl+C in each terminal window to exit from the program and stop the recording.
 
