@@ -23,7 +23,7 @@ cd ~/catkin_ws/
 catkin_make
 source devel/setup.bash
 cd src/
-git clone --recursive https://github.com/NithishkumarS/turtlebotWalker.git 
+git clone --single-branch --branch 808f https://github.com/NithishkumarS/turtlebotWalker.git 
 cd ..
 catkin_make
 ```
