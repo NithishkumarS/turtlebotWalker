@@ -1,77 +1,90 @@
 /**
- * MIT License
-
- * Copyright (c) 2018 Nithish Sanjeev Kumar
-
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
-
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
-
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 201, Nithish Kumar
+ *
+ * Redistribution and use in source and binary forms, with or without  
+ * modification, are permitted provided that the following conditions are 
+ * met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright 
+ * notice, this list of conditions and the following disclaimer in the   
+ * documentation and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its 
+ * contributors may be used to endorse or promote products derived from this 
+ * software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS 
+ * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+ * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**@file control.cpp
- *
- * @brief To publish message in a topic
- *
- * @author Nithish Sanjeev Kumar
- * @copyright 2018 , Nithish Sanjeev Kumar All rights reserved
-
+/**
+ * @file    control.cpp
+ * @author  Nithish Kumar
+ * @copyright 3-clause BSD
+ * @brief method declaration for control class
+ * Defines the methods for the control class.
  */
 
-#include "ros/ros.h"
 #include "control.hpp"
-#include "depthData.hpp"
 
 control::control() {
+  velocity = nh.advertise <geometry_msgs::Twist>
+ ("/mobile_base/commands/velocity", 1000);
+  laser = nh.subscribe <sensor_msgs::LaserScan>
+ ("/scan", 50, &depthData::callDepth, &depth);
 
-  vel = nh.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity",100);
-  laser = nh.subscribe<sensor_msgs::LaserScan>("/scan", 100, &depthData::scanCallback, &depth);
-
-  info.linear.x = 0.0;
-  info.linear.y = 0.0;
-  info.linear.z = 0.0;
-  info.angular.x = 0.0;
-  info.angular.y = 0.0;
-  info.angular.z = 0.0;
-  vel.publish(info);	
+  msg.linear.x = 0.0;
+  msg.linear.y = 0.0;
+  msg.linear.z = 0.0;
+  msg.angular.x = 0.0;
+  msg.angular.y = 0.0;
+  msg.angular.z = 0.0;
+  // publish velocity values for turtlebot
+  velocity.publish(msg);
 }
 
 control::~control() {
-
-  info.linear.x = 0.0;
-  info.linear.y = 0.0;
-  info.linear.z = 0.0;
-  info.angular.x = 0.0;
-  info.angular.y = 0.0;
-  info.angular.z = 0.0;
-  vel.publish(info);	
+  // stop the robot motion
+  msg.linear.x = 0.0;
+  msg.linear.y = 0.0;
+  msg.linear.z = 0.0;
+  msg.angular.x = 0.0;
+  msg.angular.y = 0.0;
+  msg.angular.z = 0.0;
+  velocity.publish(msg);
 }
 
-void control::command() {
+void control::move() {
+  // set loop rate
   ros::Rate loop_rate(10);
-  while(ros::ok()) {
-  	if(depth.obstacleCheck() < .5) {
-    	info.linear.x = 0;
-    	info.angular.z = 1;
-		}
-		else {
-      info.linear.x = 1;
-      info.angular.z = 0;
+  while (ros::ok()) {
+    // std::cout<<depth.collisionCheck()<<"\n";
+    // check for obstacle
+    if (depth.collisionCheck()) {
+      // stop linear motion and rotate turtlebot to avoid collision
+      msg.linear.x = 0.0;
+      msg.angular.z = 1.0;
+    } else {
+      // if no obstacle move straight
+      msg.linear.x = 0.2;
+      msg.angular.z = 0.0;
     }
-  vel.publish(info);
-  loop_rate.sleep();
+    velocity.publish(msg);
+      ros::spinOnce();
+    loop_rate.sleep();
   }
 }
+

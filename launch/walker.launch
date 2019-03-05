@@ -5,15 +5,15 @@
 
     <node
         pkg="turtlebot_walker"
-        name="walker"
-        type="walker"
+        name="turtlebot_walker"
+        type="turtlebot_walker"
         output="screen"
     />
     <node
         pkg="rosbag"
         name="record"
         type="record"
-        args="-a -x /camera/(.*) -O $(find turtlebot_walker)/results/walkerOutput.bag"
+        args="-a -x /camera/(.*) -O $(find turtlebot_walker)/results/robotOutput.bag"
         if="$(arg recordBag)"
 />
 

@@ -1,60 +1,65 @@
 /**
- * MIT License
-
- * Copyright (c) 2018 Nithish Sanjeev Kumar
-
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
-
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
-
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 201, Nithish Kumar
+ *
+ * Redistribution and use in source and binary forms, with or without  
+ * modification, are permitted provided that the following conditions are 
+ * met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright 
+ * notice, this list of conditions and the following disclaimer in the   
+ * documentation and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its 
+ * contributors may be used to endorse or promote products derived from this 
+ * software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS 
+ * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+ * CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+ * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**@file depthData.cpp
- *
- * @brief To implement the class functions
- *
- * @author Nithish Sanjeev Kumar
- * @copyright 2018 , Nithish Sanjeev Kumar All rights reserved
-
+/**
+ * @file    depthData.cpp
+ * @author  Nithish Kumar
+ * @copyright 3-clause BSD
+ * @brief method declaration for depth class
+ * Defines the methods for the depth class.
  */
-
-
+#include <iostream>
 #include "depthData.hpp"
 
- depthData::depthData() {
- 	obstacle = false;
- }
+depthData::depthData() {
+  obstacle = false;
+}
 
- depthData::~depthData(){}
+depthData::~depthData() {
+}
 
- void depthData::scanCallback(const sensor_msgs::LaserScan::ConstPtr& temp){
+void depthData::callDepth(const sensor_msgs::LaserScan::ConstPtr& msg) {
+  for (int i = 0; i < msg->ranges.size(); i++) {
+    if (msg->ranges[i] < 0.8) {
+      obstacle = true;  // true indicates presence of obstacle
+      return;
+    }
+  }
+  obstacle = false;
+}
 
- 	for(int i = 0; i<= temp->ranges.size(); i++){
- 		if(temp->ranges[i] < 1){
- 			obstacle = true;
- 			 ROS_DEBUG_STREAM("Distance " << temp->ranges[i] << " less than 1m");
-			 return;
- 		}
- 	}	
- 	obstacle = false;
-    ROS_DEBUG_STREAM("No obstacle found");
- 	return;
- }
+bool depthData::collisionCheck() {
+  return obstacle;
+}
 
- bool depthData::obstacleCheck(){
- 	return obstacle;
 
- }
+
